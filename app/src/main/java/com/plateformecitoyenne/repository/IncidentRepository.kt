@@ -9,7 +9,9 @@ class IncidentRepository {
         titre: String,
         description: String,
         categorie: String,
-        priorite: String
+        priorite: String,
+        latitude: Double?,
+        longitude: Double?
     ): Result<Unit> {
 
         return try {
@@ -19,7 +21,9 @@ class IncidentRepository {
                     titre = titre,
                     description = description,
                     categorie = categorie,
-                    priorite = priorite
+                    priorite = priorite,
+                    latitude = latitude,
+                    longitude = longitude
                 )
             )
 

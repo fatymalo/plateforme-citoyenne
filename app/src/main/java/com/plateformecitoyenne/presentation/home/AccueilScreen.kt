@@ -23,6 +23,7 @@ fun AccueilScreen(
     onVoirIncidents: () -> Unit,
     onCarte: () -> Unit,
     onProfil: () -> Unit,
+    onNotifications: () -> Unit,
     onLogout: () -> Unit
 ) {
 
@@ -65,8 +66,11 @@ fun AccueilScreen(
 
 
             IconButton(
-                onClick = { }
-            ) {
+                onClick = {
+                    onNotifications()
+                }
+            )
+            {
 
                 Icon(
                     imageVector = Icons.Default.Notifications,

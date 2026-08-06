@@ -1,26 +1,25 @@
 package com.plateformecitoyenne.presentation.incident
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
 import com.plateformecitoyenne.repository.IncidentRepository
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +32,10 @@ fun SignalerIncidentScreen(
     var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var message by remember { mutableStateOf<String?>(null) }
+
+    // Localisation
+    var latitude by remember { mutableStateOf("") }
+    var longitude by remember { mutableStateOf("") }
 
     val repository = remember { IncidentRepository() }
     val scope = rememberCoroutineScope()
@@ -53,18 +56,17 @@ fun SignalerIncidentScreen(
         "Urgente"
     )
 
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        imageUri = uri
-    }
-
-
     var categorie by remember { mutableStateOf(categories[0]) }
     var priorite by remember { mutableStateOf(priorites[1]) }
 
     var categorieExpanded by remember { mutableStateOf(false) }
     var prioriteExpanded by remember { mutableStateOf(false) }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        imageUri = uri
+    }
 
     Column(
         modifier = Modifier
@@ -73,9 +75,7 @@ fun SignalerIncidentScreen(
             .padding(20.dp)
     ) {
 
-        Button(
-            onClick = onRetour
-        ) {
+        Button(onClick = onRetour) {
             Text("⬅ Retour")
         }
 
@@ -87,6 +87,8 @@ fun SignalerIncidentScreen(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        // ---------------- PHOTO ----------------
 
         Card(
             modifier = Modifier
@@ -103,33 +105,25 @@ fun SignalerIncidentScreen(
             ) {
 
                 if (imageUri != null) {
-
                     Image(
                         painter = rememberAsyncImagePainter(imageUri),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
-
                 } else {
-
                     Text("Aucune photo")
                 }
             }
-
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
 
             Button(
                 modifier = Modifier.weight(1f),
-                onClick = {
-                    onCamera()
-                }
+                onClick = onCamera
             ) {
                 Text("📷 Photo")
             }
@@ -146,10 +140,11 @@ fun SignalerIncidentScreen(
             ) {
                 Text("🖼 Galerie")
             }
-
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+
+        // ---------------- TITRE ----------------
 
         OutlinedTextField(
             value = titre,
@@ -159,6 +154,8 @@ fun SignalerIncidentScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // ---------------- DESCRIPTION ----------------
 
         OutlinedTextField(
             value = description,
@@ -171,11 +168,11 @@ fun SignalerIncidentScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // ---------------- CATEGORIE ----------------
+
         ExposedDropdownMenuBox(
             expanded = categorieExpanded,
-            onExpandedChange = {
-                categorieExpanded = !categorieExpanded
-            }
+            onExpandedChange = { categorieExpanded = !categorieExpanded }
         ) {
 
             OutlinedTextField(
@@ -190,34 +187,28 @@ fun SignalerIncidentScreen(
 
             ExposedDropdownMenu(
                 expanded = categorieExpanded,
-                onDismissRequest = {
-                    categorieExpanded = false
-                }
+                onDismissRequest = { categorieExpanded = false }
             ) {
 
-                categories.forEach {
-
+                categories.forEach { item ->
                     DropdownMenuItem(
-                        text = { Text(it) },
+                        text = { Text(item) },
                         onClick = {
-                            categorie = it
+                            categorie = item
                             categorieExpanded = false
                         }
                     )
-
                 }
-
             }
-
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // ---------------- PRIORITE ----------------
+
         ExposedDropdownMenuBox(
             expanded = prioriteExpanded,
-            onExpandedChange = {
-                prioriteExpanded = !prioriteExpanded
-            }
+            onExpandedChange = { prioriteExpanded = !prioriteExpanded }
         ) {
 
             OutlinedTextField(
@@ -232,28 +223,46 @@ fun SignalerIncidentScreen(
 
             ExposedDropdownMenu(
                 expanded = prioriteExpanded,
-                onDismissRequest = {
-                    prioriteExpanded = false
-                }
+                onDismissRequest = { prioriteExpanded = false }
             ) {
 
-                priorites.forEach {
-
+                priorites.forEach { item ->
                     DropdownMenuItem(
-                        text = { Text(it) },
+                        text = { Text(item) },
                         onClick = {
-                            priorite = it
+                            priorite = item
                             prioriteExpanded = false
                         }
                     )
-
                 }
-
             }
-
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // ---------------- LOCALISATION ----------------
+
+        Text("📍 Localisation")
+
+        OutlinedTextField(
+            value = latitude,
+            onValueChange = { latitude = it },
+            label = { Text("Latitude") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = longitude,
+            onValueChange = { longitude = it },
+            label = { Text("Longitude") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Spacer(modifier = Modifier.height(24.dp))
+
+        // ---------------- ENVOI ----------------
 
         Button(
             modifier = Modifier
@@ -264,16 +273,16 @@ fun SignalerIncidentScreen(
                 scope.launch {
 
                     if (titre.isBlank() || description.isBlank()) {
-
                         message = "Veuillez remplir tous les champs"
-
                     } else {
 
                         val result = repository.envoyerIncident(
                             titre = titre,
                             description = description,
                             categorie = categorie,
-                            priorite = priorite
+                            priorite = priorite,
+                            latitude = latitude.toDoubleOrNull(),
+                            longitude = longitude.toDoubleOrNull()
                         )
 
                         if (result.isSuccess) {
@@ -282,9 +291,11 @@ fun SignalerIncidentScreen(
 
                             titre = ""
                             description = ""
+                            latitude = ""
+                            longitude = ""
+                            imageUri = null
 
                         } else {
-
                             message = result.exceptionOrNull()?.message
                         }
                     }
@@ -294,22 +305,21 @@ fun SignalerIncidentScreen(
             Text("📤 Envoyer le signalement")
         }
 
+        // ---------------- MESSAGE ----------------
 
-        message?.let {
+        message?.let { text ->
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = it,
-                color = if (it.contains("succès"))
+                text = text,
+                color = if (text.contains("succès"))
                     Color(0xFF2E7D32)
                 else
                     MaterialTheme.colorScheme.error
             )
         }
 
-
         Spacer(modifier = Modifier.height(20.dp))
-
     }
 }

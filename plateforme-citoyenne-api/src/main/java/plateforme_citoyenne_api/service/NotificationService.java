@@ -5,26 +5,77 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import plateforme_citoyenne_api.entity.Notification;
+import plateforme_citoyenne_api.entity.Utilisateur;
 import plateforme_citoyenne_api.repository.NotificationRepository;
+
 
 @Service
 public class NotificationService {
 
+
     private final NotificationRepository repository;
 
-    public NotificationService(NotificationRepository repository) {
+
+    public NotificationService(
+            NotificationRepository repository
+    ) {
+
         this.repository = repository;
+
     }
+
+
 
     public List<Notification> getAll() {
+
         return repository.findAll();
+
     }
 
-    public Notification save(Notification notification) {
+
+
+    public Notification save(
+            Notification notification
+    ) {
+
         return repository.save(notification);
+
     }
+
+
 
     public void delete(Long id) {
+
         repository.deleteById(id);
+
     }
+
+
+
+    // Envoyer une notification à un citoyen
+    public Notification envoyerNotification(
+            Utilisateur utilisateur,
+            String titre,
+            String message
+    ) {
+
+
+        Notification notification = new Notification();
+
+
+        notification.setUtilisateur(utilisateur);
+
+        notification.setTitre(titre);
+
+        notification.setMessage(message);
+
+
+        notification.setLue(false);
+
+
+
+        return repository.save(notification);
+
+    }
+
 }

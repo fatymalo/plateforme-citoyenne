@@ -12,16 +12,24 @@ public class Utilisateur {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String nom;
 
+
     private String prenom;
+
 
     @Column(unique = true)
     private String email;
 
+
     private String motDePasse;
+
 
     private String telephone;
 
-    private String role;
+
+    @Column(nullable = false)
+    private String role = "CITOYEN";
+
 }

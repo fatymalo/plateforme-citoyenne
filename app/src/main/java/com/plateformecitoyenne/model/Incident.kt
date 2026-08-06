@@ -9,5 +9,6 @@ data class Incident(
     val longitude: Double? = null,
     val adresse: String? = null,
     val priorite: String,
-    val statut: String
+    val statut: String,
+    val nombreVotes: Int = 0
 )
