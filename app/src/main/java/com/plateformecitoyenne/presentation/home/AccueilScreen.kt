@@ -7,7 +7,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +30,7 @@ fun AccueilScreen(
     onCarte: () -> Unit,
     onProfil: () -> Unit,
     onNotifications: () -> Unit,
+    onAdmin: () -> Unit,
     onLogout: () -> Unit
 ) {
 
@@ -41,6 +48,9 @@ fun AccueilScreen(
             .padding(20.dp)
     ) {
 
+        // ==========================
+        // EN-TÊTE
+        // ==========================
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -48,8 +58,7 @@ fun AccueilScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
 
                 Text(
                     text = "Bonjour 👋",
@@ -61,31 +70,29 @@ fun AccueilScreen(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
             }
 
-
-            IconButton(
+            FilledTonalIconButton(
                 onClick = {
                     onNotifications()
                 }
-            )
-            {
+            ) {
 
                 Icon(
                     imageVector = Icons.Default.Notifications,
-                    contentDescription = "Notifications"
+                    contentDescription = "Notifications",
+                    tint = MaterialTheme.colorScheme.primary
                 )
-
             }
-
         }
 
 
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
+        Spacer(modifier = Modifier.height(30.dp))
 
+
+        // ==========================
+        // CARTES PRINCIPALES
+        // ==========================
 
         HomeCard(
             title = "📢 Signaler un incident",
@@ -95,9 +102,7 @@ fun AccueilScreen(
         )
 
 
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
+        Spacer(modifier = Modifier.height(18.dp))
 
 
         HomeCard(
@@ -108,9 +113,7 @@ fun AccueilScreen(
         )
 
 
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
+        Spacer(modifier = Modifier.height(18.dp))
 
 
         HomeCard(
@@ -121,9 +124,7 @@ fun AccueilScreen(
         )
 
 
-        Spacer(
-            modifier = Modifier.height(18.dp)
-        )
+        Spacer(modifier = Modifier.height(18.dp))
 
 
         HomeCard(
@@ -134,10 +135,23 @@ fun AccueilScreen(
         )
 
 
-        Spacer(
-            modifier = Modifier.weight(1f)
+        Spacer(modifier = Modifier.height(18.dp))
+
+
+        HomeCard(
+            title = "🛠️ Espace administrateur",
+            description = "Gérer les signalements citoyens",
+            color = Color(0xFFD32F2F),
+            onClick = onAdmin
         )
 
+
+        Spacer(modifier = Modifier.weight(1f))
+
+
+        // ==========================
+        // DÉCONNEXION
+        // ==========================
 
         OutlinedButton(
             modifier = Modifier.fillMaxWidth(),
@@ -149,18 +163,14 @@ fun AccueilScreen(
                 contentDescription = "Déconnexion"
             )
 
-            Spacer(
-                modifier = Modifier.width(10.dp)
-            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
 
             Text("Déconnexion")
-
         }
-
     }
-
 }
-
 
 
 @Composable
@@ -171,55 +181,36 @@ fun HomeCard(
     onClick: () -> Unit
 ) {
 
-
     Card(
-
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 onClick()
             },
-
         colors = CardDefaults.cardColors(
             containerColor = color
         ),
-
         shape = RoundedCornerShape(20.dp)
-
     ) {
-
 
         Column(
             modifier = Modifier.padding(20.dp)
         ) {
 
-
             Text(
-
                 text = title,
-
                 color = Color.White,
-
                 style = MaterialTheme.typography.titleLarge
-
             )
 
 
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
+            Spacer(modifier = Modifier.height(8.dp))
 
 
             Text(
-
                 text = description,
-
                 color = Color.White
-
             )
-
         }
-
     }
-
 }
